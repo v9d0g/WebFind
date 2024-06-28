@@ -1,0 +1,8 @@
+link:
+  href:
+    and:
+      regular:
+        - 
+    or:
+      regular:
+        - "/tongda\\.ico$"

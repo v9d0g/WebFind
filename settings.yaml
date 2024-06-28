@@ -1,0 +1,24 @@
+SETTINGS:
+  connect: 5
+  write: 5
+  read: 5
+  pool: 5
+  allow:
+    - 200
+    - 301
+    - 302
+  thread: 100
+  code: false
+  detail: false
+  save: false
+  proxy: false
+
+HTTP:
+  headers:
+    User-Agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
+  cookies: ""
+  proxy:
+    email: ""
+    key: ""
+    q: 'protocol=="socks5" && "Version:5 Method:No Authentication(0x00)" && country="CN"'
+    url:

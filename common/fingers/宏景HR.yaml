@@ -1,0 +1,8 @@
+img:
+  src:
+    and:
+      regular:
+        -
+    or:
+      regular:
+        - "^/images/hcm/themes/default/login"

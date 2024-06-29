@@ -1,14 +1,15 @@
 import pandas as pd
 import yaml
 import os
+import random
 
-from common.ComMsg import ComMsg,ErrorExit
+from common.ComMsg import ComMsg, ErrorExit
 
 m = ComMsg()
 
 
 # 处理重复url以及前缀
-def handurls(urls):
+def handUrls(urls):
     # 使用一个集合来存储去掉前缀后的URL
     unique_urls = set()
     res = []
@@ -44,6 +45,11 @@ def handurls(urls):
     return res, len(res)
 
 
+# 处理ip 8.8.8.8/24 8.8.8.8-255 8.8.8.8三种方式
+def handIp(ip):
+    pass
+
+
 # 读取url.txt 返回处理后的列表 以及输入时的个数和最终个数
 def ReadFile(filename):
     temp = []
@@ -51,9 +57,8 @@ def ReadFile(filename):
     res = []
     all_count = 0
     try:
-        m.chgCont(filename)
-        m.addTags("Message", "white")
-        m.printMsg()
+        m.chgCont(f"Load {filename}.")
+        m.printMsg("white", "Message")
         with open(filename, "r") as file:
             for line in file:
                 stripped_line = line.strip()
@@ -62,7 +67,7 @@ def ReadFile(filename):
                 temp.append(stripped_line)
                 all_count += 1
             # 排除重复后的列表以及个数
-            res, res_count = handurls(temp)
+            res, res_count = handUrls(temp)
         return res, all_count, res_count
     # 没有找到
     except FileNotFoundError:
@@ -76,6 +81,29 @@ def ReadFile(filename):
     except Exception as e:
         ErrorExit(f"Unknown error: {e}.")
 
+
+# 全局变量存储上一次使用的代理
+last_proxy = None
+
+
+def ReadProxy():
+    global last_proxy
+    # 存在文件
+    with open("proxies.txt", "r") as file:
+        lines = file.readlines()
+        if lines:
+            proxies = [line.strip() for line in lines]
+            if len(proxies) == 1:
+                proxy = proxies[0]
+            else:
+                proxy = random.choice(proxies)
+                while proxy == last_proxy:
+                    proxy = random.choice(proxies)
+            last_proxy = proxy
+        else:
+            # 有文件无内容
+            ErrorExit("proxies.txt No Contents.")
+    return proxy
 
 
 # 保存文件为excel
@@ -91,12 +119,10 @@ def SaveFile(inputs):
             df = pd.DataFrame(data)
             df.to_excel(filename, index=True)
             m.chgCont(f"The file \033[32m{filename}\033[0m is saved.")
-            m.addTags("Message", "white")
-            m.printMsg()
+            m.printMsg("white", "Message")
         else:
             m.chgCont(f"{inputs} is not suitable.")
-            m.addTags("Error", "red")
-            m.printMsg()
+            m.printMsg("red", "Error")
     except Exception as e:
         ErrorExit(e)
 

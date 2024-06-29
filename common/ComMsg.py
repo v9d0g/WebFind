@@ -28,22 +28,22 @@ class ComMsg:
         else:
             self.content = self.content + f"[{colors[option]}{tag}{colors['reset']}]"
 
-    def printMsg(self, refresh=False):
+    def printMsg(self, tags_color, tagscontent, refresh=False):
+        self.addTags(tagscontent, tags_color)
         self.addTags(datetime.now().strftime("%H:%M:%S"), "blue")
         if refresh:
-            print(f"{self.content} ", end="\r")
+            print(f"{self.content}", end="\r")
         # 重置
         else:
-            print(self.content)
+            print(f"{self.content}")
         self.chgCont("")
 
 
 # 出现错误 输出错误信息并退出
 def ErrorExit(message):
     m = ComMsg(message)
+    m.printMsg("red", "Error")
     print(HELP)
-    m.addTags("Error", "red")
-    m.printMsg()
     import sys
 
     sys.exit(0)

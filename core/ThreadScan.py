@@ -16,7 +16,7 @@ lock = asyncio.Lock()
 m = ComMsg()
 
 
-def Judgefinger(html):
+def judgeFinger(html):
     path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "../", "common", "fingers"
     )
@@ -48,22 +48,8 @@ def Judgefinger(html):
         ErrorExit(e)
 
 
-def ReadProxy():
-    # 存在文件
-    with open("proxies.txt", "r") as file:
-        lines = file.readlines()
-        if lines:
-            # 存在内容
-            proxy = random.choice(lines).strip()
-            # print(proxy)
-        else:
-            # 有文件无内容
-            ErrorExit("proxies.txt No Contents.")
-    return proxy
-
-
 # 修改后的 scanWeb 函数
-async def scanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
+async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
     async with semaphore:
         try:
             timeout = httpx.Timeout(
@@ -76,22 +62,15 @@ async def scanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
             # verify忽略证书验证
             # follow_redirects跟随重定向
             if SETTINGS["proxy"]:  # 开启代理的情况
-                if HTTP["proxy"]["url"] != None:
+                if HTTP["proxy"]["url"] != "use file":
                     try:
                         proxy = HTTP["proxy"]["url"]
                     except Exception as e:
                         ErrorExit(e)
                 # 无参数 自动获取
                 else:
-                    try:
-                        if os.path.exists("proxies.txt"):
-                            proxy = ReadProxy()
-                        else:
-                            # 无文件
-                            GetProxy()  # 生成文件
-                            proxy = ReadProxy()
-                    except Exception as e:
-                        ErrorExit(e)
+                    proxy = ReadProxy()
+
                 proxies = {
                     "http://": f"socks5://{proxy}",
                     "https://": f"socks5://{proxy}",
@@ -112,16 +91,14 @@ async def scanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
                     async with lock:
                         code = response.status_code
                         title = getCont(response.text, "title")
-                        finger = Judgefinger(response.text)
+                        finger = judgeFinger(response.text)
                         m.chgCont(f"{url}" + " ")
-                        if SETTINGS["code"]:
-                            m.addTags(f"{code}", "yellow")
+                        m.addTags(f"{code}", "yellow")
                         if SETTINGS["detail"]:
                             # 识别指纹
                             m.addTags(finger, "green", "R")
                             m.addTags(title, "black", "R")
-                        m.addTags("Alive", "green")
-                        m.printMsg()
+                        m.printMsg("green", "Alive")
                         ALIVECOUNT.append("ok")
                         SUCCESSMESSAGE.update(
                             {
@@ -138,7 +115,9 @@ async def scanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
 
 
 # 用于运行多个协程任务
+"""
 async def Start(urls):
     semaphore = asyncio.Semaphore(SETTINGS["thread"])
     tasks = [scanWeb(url, semaphore) for url in urls]
     await asyncio.gather(*tasks)
+"""

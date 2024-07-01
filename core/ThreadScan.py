@@ -62,7 +62,7 @@ async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
             # verify忽略证书验证
             # follow_redirects跟随重定向
             if SETTINGS["proxy"]:  # 开启代理的情况
-                if HTTP["proxy"]["url"] != "use file":
+                if HTTP["proxy"]["url"] != "" and HTTP["proxy"]["url"] != None:
                     try:
                         proxy = HTTP["proxy"]["url"]
                     except Exception as e:
@@ -77,7 +77,6 @@ async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
                 }
             else:
                 proxies = None
-
             async with httpx.AsyncClient(
                 timeout=timeout, verify=False, follow_redirects=True, proxies=proxies
             ) as client:

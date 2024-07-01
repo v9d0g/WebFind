@@ -82,28 +82,16 @@ def ReadFile(filename):
         ErrorExit(f"Unknown error: {e}.")
 
 
-# 全局变量存储上一次使用的代理
-last_proxy = None
-
-
 def ReadProxy():
-    global last_proxy
-    # 存在文件
-    with open("proxies.txt", "r") as file:
-        lines = file.readlines()
-        if lines:
-            proxies = [line.strip() for line in lines]
-            if len(proxies) == 1:
-                proxy = proxies[0]
+    try:
+        with open("proxies.txt", "r") as file:
+            proxies = file.readlines()
+            if proxies:
+                return random.choice(proxies).strip()
             else:
-                proxy = random.choice(proxies)
-                while proxy == last_proxy:
-                    proxy = random.choice(proxies)
-            last_proxy = proxy
-        else:
-            # 有文件无内容
-            ErrorExit("proxies.txt No Contents.")
-    return proxy
+                ErrorExit("proxies.txt has no content.")
+    except FileNotFoundError:
+        ErrorExit("proxies.txt not found.")
 
 
 # 保存文件为excel

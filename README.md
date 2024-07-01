@@ -35,7 +35,10 @@ SETTINGS:
     - 301
     - 302
   thread: 100
+  number: 50
 ```
+
+number用于指定爬取socks代理时的测试数量。
 
 ## 用法
 

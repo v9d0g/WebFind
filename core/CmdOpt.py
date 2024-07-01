@@ -72,16 +72,13 @@ def procOpt(args, SETTINGS=SETTINGS, HTTP=HTTP):
                 else:
                     m.chgCont(f"The File proxies.txt Not Found.")
                     m.printMsg("yellow", "Warning")
-                    GetProxy(
-                        HTTP["proxy"]["email"], HTTP["proxy"]["key"], HTTP["proxy"]["q"]
-                    )  # 生成文件
+                    GetProxy()  # 生成文件
             except Exception as e:
                 ErrorExit(e)
 
 
 # 总体流程处理
 def Command(argv):
-    print(LOGO)
     # 获取命令参数
     try:
         opts, _args = getopt.getopt(

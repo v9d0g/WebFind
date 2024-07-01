@@ -8,6 +8,7 @@ SETTINGS:
     - 301
     - 302
   thread: 100
+  number: 50
   detail: false
   save: false
   proxy: false

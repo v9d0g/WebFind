@@ -1,14 +1,12 @@
 import asyncio
 import httpx
 import os
-import random
 
 from common.ComMsg import ComMsg, ErrorExit
 from common.ConstSetting import SETTINGS, HTTP
 from common.ConstData import FAILEDMESSAGE, SUCCESSMESSAGE, ALIVECOUNT
 from utils.HandleResponse import *
 from utils.HandleFlie import *
-from utils.HandleProxy import GetProxy
 
 # 公有锁
 lock = asyncio.Lock()
@@ -48,16 +46,32 @@ def judgeFinger(html):
         ErrorExit(e)
 
 
-# 修改后的 scanWeb 函数
+"""
+from tenacity import retry, stop_after_attempt, wait_fixed
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
+"""
+
+
 async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
     async with semaphore:
+        async with lock:
+            m.chgCont(f"[#{(len(ALIVECOUNT)%15)*'#'}")
+            m.printMsg("magenta", f"Testing", refresh=True)
         try:
-            timeout = httpx.Timeout(
-                connect=SETTINGS["connect"],
-                read=SETTINGS["read"],
-                write=SETTINGS["write"],
-                pool=SETTINGS["pool"],
-            )
+            if (
+                SETTINGS["connect"] == None
+                and SETTINGS["read"] == None
+                and SETTINGS["write"] == None
+                and SETTINGS["pool"] == None
+            ):
+                timeout = None
+            else:
+                timeout = httpx.Timeout(
+                    connect=SETTINGS["connect"],
+                    read=SETTINGS["read"],
+                    write=SETTINGS["write"],
+                    pool=SETTINGS["pool"],
+                )
             # 发送http请求
             # verify忽略证书验证
             # follow_redirects跟随重定向
@@ -77,8 +91,13 @@ async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
                 }
             else:
                 proxies = None
+            # print(proxies)
             async with httpx.AsyncClient(
-                timeout=timeout, verify=False, follow_redirects=True, proxies=proxies
+                timeout=timeout,
+                verify=False,
+                follow_redirects=True,
+                proxies=proxies,
+                http2=True,
             ) as client:
                 response = await client.get(
                     url=url,
@@ -90,13 +109,14 @@ async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
                     async with lock:
                         code = response.status_code
                         title = getCont(response.text, "title")
-                        finger = judgeFinger(response.text)
+
                         m.chgCont(f"{url}" + " ")
                         m.addTags(f"{code}", "yellow")
+                        m.addTags(title, "black", "R")
                         if SETTINGS["detail"]:
                             # 识别指纹
+                            finger = judgeFinger(response.text)
                             m.addTags(finger, "green", "R")
-                            m.addTags(title, "black", "R")
                         m.printMsg("green", "Alive")
                         ALIVECOUNT.append("ok")
                         SUCCESSMESSAGE.update(
@@ -104,7 +124,6 @@ async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
                                 url: {
                                     "code": f"{code}",
                                     "title": f"{title}",
-                                    "finger": f"{finger}",
                                 }
                             }
                         )

@@ -1,5 +1,3 @@
-import os
-
 from utils.HandleFlie import ReadYaml
 
 # 构建相对路径

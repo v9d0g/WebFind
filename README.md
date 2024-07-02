@@ -2,7 +2,7 @@
 
 ```sh
 0  ___           _ __ __                
-x  \==\    _    /===__ _/      WEB FIND V1.0.2
+x  \==\    _    /===__ _/      WEB FIND V1.0.4
 7   \==\  /=\  /==/_ __        	批量web存活探测
 7    \==\/ _ \/==_ _ _/        	[*] 支持socks代理
 1     \===/ \/==/              	[*] 自定义指纹识别
@@ -48,7 +48,7 @@ number用于指定爬取socks代理时的测试数量。
 python webfind.py -H
 ```
 
-常规存活探测，将需要探测的url保存于url.txt文件中。
+常规存活探测，将需要探测的url保存于url.txt文件中。显示目标web的状态码、title。
 
 ```sh
 python webfind.py -u url.txt
@@ -56,10 +56,10 @@ python webfind.py -u url.txt
 
 ### 参数详解
 
-- 与指纹模板进行匹配，并显示目标web的标题与响应码。
+- 与指纹模板进行匹配。
 
   ```sh
-  python webfind.py -u url.txt -D
+  python webfind.py -u url.txt -R
   ```
 
 - 保存结果到output.xlsx文件。
@@ -72,6 +72,8 @@ python webfind.py -u url.txt
 
   使用`-P`通过fofa获取未授权socks代理保存在proxies.txt文件中，建议从获取的proxies.txt文件中，手动输入`-p`指定代理。
 
+  也可以自己添加可使用的socks代理至proxies.txt中，每次探测将使用该文件中的随机ip。
+  
   ```sh
   # Self
   python webfind.py -u url.txt -p ip:port

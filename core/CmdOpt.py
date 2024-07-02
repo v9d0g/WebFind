@@ -21,7 +21,7 @@ def sortOpt(opts):
         "-H": 0xFFF,
         "-p": 0xFEF,
         "-P": 0xFED,
-        "-D": 0xFEC,
+        "-R": 0xFEC,
         "-u": 0xFEB,
         "-S": 0xFEA,
     }
@@ -54,7 +54,7 @@ def procOpt(args, SETTINGS=SETTINGS, HTTP=HTTP):
         m.printMsg("white", "Message")
     elif args[0] == "-S":
         SETTINGS["save"] = True
-    elif args[0] == "-D":
+    elif args[0] == "-R":
         SETTINGS["detail"] = True
     elif args[0] == "-p" or args[0] == "-P":
         # auto proxy
@@ -68,7 +68,7 @@ def procOpt(args, SETTINGS=SETTINGS, HTTP=HTTP):
                 if os.path.exists("proxies.txt"):
                     m.chgCont(f"The File proxies.txt Exists.")
                     m.printMsg("white", "Message")
-                    HTTP["proxy"]["url"] = "use file"
+                    # HTTP["proxy"]["url"] = "use file"
                 else:
                     m.chgCont(f"The File proxies.txt Not Found.")
                     m.printMsg("yellow", "Warning")
@@ -83,8 +83,8 @@ def Command(argv):
     try:
         opts, _args = getopt.getopt(
             argv,
-            "HSDPp:u:",
-            ["Help", "Save", "Detail", "Proxy", "proxy=", "url="],
+            "HSRPp:u:",
+            ["Help", "Save", "Recognize", "Proxy", "proxy=", "url="],
         )
         opts = sortOpt(opts)
         # print(f"OPTS:{opts}")

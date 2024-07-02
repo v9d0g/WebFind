@@ -64,7 +64,7 @@ async def testPort(proxy, semaphore, lock=asyncio.Lock()):
                 m.chgCont(
                     f"Start Testing Ports: {len(port_count)}/{int(len(ip_ports))}."
                 )
-                m.printMsg("white", "Message", refresh=True)
+                m.printMsg("magenta", "Testing", refresh=True)
 
 
 proxy_count = []
@@ -106,7 +106,7 @@ async def testProxy(proxy, semaphore, lock=asyncio.Lock()):
                 m.chgCont(
                     f"Start Testing Proxy: {len(proxy_count)}/{len(open_proxies)}."
                 )
-                m.printMsg("white", "Message", refresh=True)
+                m.printMsg("magenta", "Testing", refresh=True)
             if len(proxy_count) == len(open_proxies):
                 return
 

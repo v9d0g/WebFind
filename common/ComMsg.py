@@ -32,7 +32,7 @@ class ComMsg:
         self.addTags(tagscontent, tags_color)
         self.addTags(datetime.now().strftime("%H:%M:%S"), "blue")
         if refresh:
-            print(f"{self.content}", end="\r")
+            print(f"{self.content:<50}", end="\r")
         # 重置
         else:
             print(f"{self.content}")

@@ -3,7 +3,7 @@ HELP = f"""-u <path> --url\t\t"Choose the targets."\r
 -P        --Proxy\t"Auto Proxy."\r
 -H        --Help\t"Show the help."\r
 -S        --Save\t"Save the alive urls."\r
--D        --Detail\t"Show the details of website."
+-R        --Recognize"\t"Recognize the website."
 """
 
 LOGO = f"""

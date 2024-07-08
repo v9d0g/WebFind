@@ -1,21 +1,25 @@
 SETTINGS:
-  connect: 5
-  write: 5
-  read: 5
-  pool: 5
+  connect: 20
+  write: 20
+  read: 20
+  pool: 20
   allow:
     - 200
     - 301
     - 302
   thread: 100
-  number: 50
+  number: 500
   detail: false
   save: false
   proxy: false
 
 HTTP:
   headers:
-    User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0"
+    User-Agent: 
+      - "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0"
+      - "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; en-us) AppleWebKit/534.50 (KHTML, like Gecko) Version/5.1 Safari/534.50"
+      - "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; SE 2.X MetaSr 1.0; SE 2.X MetaSr 1.0; .NET CLR 2.0.50727; SE 2.X MetaSr 1.0)"
+    X-Forwarded-For: 127.0.0.1
   cookies: ""
   proxy:
     email: ""

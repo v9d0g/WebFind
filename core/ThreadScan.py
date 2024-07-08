@@ -55,7 +55,8 @@ from tenacity import retry, stop_after_attempt, wait_fixed
 async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
     async with semaphore:
         async with lock:
-            m.chgCont(f"[#{(len(ALIVECOUNT)%15)*'#'}")
+            temp = (len(ALIVECOUNT) % 19) * "#"
+            m.chgCont(f"[#{temp.ljust(19,' ')}]")
             m.printMsg("magenta", f"Testing", refresh=True)
         try:
             if (
@@ -99,9 +100,12 @@ async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
                 proxies=proxies,
                 http2=True,
             ) as client:
+                # random.choice(HTTP["headers"]["User-Agent"])
+                headers = HTTP["headers"]
+                headers["User-Agent"] = random.choice(HTTP["headers"]["User-Agent"])
                 response = await client.get(
                     url=url,
-                    headers=HTTP["headers"],
+                    headers=headers,
                     cookies=HTTP["cookies"],
                 )
                 if response.status_code in SETTINGS["allow"]:

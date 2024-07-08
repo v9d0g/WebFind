@@ -26,7 +26,10 @@ def getIp(email, key, q):
         data = json.loads(fofares.text)
         if "errmsg" in data:
             ErrorExit(data["errmsg"])
-        res = [result[0] for result in data["results"]][: int(SETTINGS["number"])]
+        if SETTINGS["number"] != None:
+            res = [result[0] for result in data["results"]][: int(SETTINGS["number"])]
+        else:
+            res = [result[0] for result in data["results"]]
         m.chgCont(f"Get Socks-proxy ip and port, counts:{len(res)}.")
         m.printMsg("white", "Message")
     except Exception as e:
@@ -85,7 +88,7 @@ async def testProxy(proxy, semaphore, lock=asyncio.Lock()):
                     "https://": f"socks5://{proxy}",
                 },
                 timeout=timeout,
-                verify=False,
+                verify=True,
             ) as client:
                 response = await client.get(
                     url="https://www.baidu.com/",

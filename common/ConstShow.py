@@ -1,4 +1,5 @@
-HELP = f"""-u <filename> --url\t\t"Choose the targets."\r
+HELP = f"""
+-u <filename> --url\t\t"Choose the targets."\r
 -p <url:port>  --proxy\t"Use Self Proxy."\r
 -P             --Proxy\t"Auto Proxy."\r
 -H             --Help\t"Show the help."\r

@@ -16,8 +16,8 @@ m = ComMsg()
 def getIp(email, key, q):
     if email == "" or key == "":
         ErrorExit(f"email:< {email} > key:< {key} >.")
-    m.chgCont("Start Init Proxy ...")
-    m.printMsg("white", "Message")
+    m.changeContents("Start Init Proxy ...")
+    m.printMessage("white", "MESSAGE")
     try:
         qbase64 = base64.b64encode(q.encode("utf-8")).decode("utf-8")
         fofaurl = f"http://fofa.info/api/v1/search/all?email={email}&key={key}&qbase64={qbase64}&size=10000"
@@ -30,8 +30,8 @@ def getIp(email, key, q):
             res = [result[0] for result in data["results"]][: int(SETTINGS["number"])]
         else:
             res = [result[0] for result in data["results"]]
-        m.chgCont(f"Get Socks-proxy ip and port, counts:{len(res)}.")
-        m.printMsg("white", "Message")
+        m.changeContents(f"Get Socks-proxy ip and port, counts:{len(res)}.")
+        m.printMessage("white", "MESSAGE")
     except Exception as e:
         ErrorExit(e)
     return res
@@ -64,16 +64,22 @@ async def testPort(proxy, semaphore, lock=asyncio.Lock()):
         finally:
             async with lock:
                 port_count.append(1)
-                m.chgCont(
+                m.changeContents(
                     f"Start Testing Ports: {len(port_count)}/{int(len(ip_ports))}."
                 )
-                m.printMsg("magenta", "Testing", refresh=True)
+                m.printMessage("magenta", "TESTING", refresh=True)
 
 
 proxy_count = []
 
 
 async def testProxy(proxy, semaphore, lock=asyncio.Lock()):
+    """
+    测试代理是否可用
+    :param proxy: ip与端口
+    :param semaphore: 并发数
+    :param lock: 资源锁
+    """
     async with semaphore:
         try:
             timeout = httpx.Timeout(
@@ -106,22 +112,20 @@ async def testProxy(proxy, semaphore, lock=asyncio.Lock()):
         finally:
             async with lock:
                 proxy_count.append(1)
-                m.chgCont(
+                m.changeContents(
                     f"Start Testing Proxy: {len(proxy_count)}/{len(open_proxies)}."
                 )
-                m.printMsg("magenta", "Testing", refresh=True)
+                m.printMessage("magenta", "TESTING", refresh=True)
             if len(proxy_count) == len(open_proxies):
                 return
 
 
-# 生成proxies.txt文件
 def GetProxy():
-    # print(email, key, q)
     global ip_ports
     ip_ports = getIp(HTTP["proxy"]["email"], HTTP["proxy"]["key"], HTTP["proxy"]["q"])
     CoroutineMain(ip_ports, testPort)
     print("")
     CoroutineMain(open_proxies, testProxy)
     print("")
-    m.chgCont(f"\033[KTesting Done.")
-    m.printMsg("white", "Message")
+    m.changeContents(f"\033[KTesting Done.")
+    m.printMessage("white", "MESSAGE")

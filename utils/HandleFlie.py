@@ -5,12 +5,12 @@ import random
 
 from common.ComMsg import ComMsg, ErrorExit
 
+
 m = ComMsg()
 
 
 # 处理重复url以及前缀
-def handUrls(urls):
-    # 使用一个集合来存储去掉前缀后的URL
+def handUrls(urls: list):
     unique_urls = set()
     res = []
 
@@ -45,20 +45,19 @@ def handUrls(urls):
     return res, len(res)
 
 
-# 处理ip 8.8.8.8/24 8.8.8.8-255 8.8.8.8三种方式
+# TODO:处理ip 8.8.8.8/24 8.8.8.8-255 8.8.8.8三种方式
 def handIp(ip):
     pass
 
 
-# 读取url.txt 返回处理后的列表 以及输入时的个数和最终个数
 def ReadFile(filename):
     temp = []
     # 结果
     res = []
     all_count = 0
     try:
-        m.chgCont(f"Load {filename}.")
-        m.printMsg("white", "Message")
+        m.changeContents(f"Load {filename}.")
+        m.printMessage("white", "MESSAGE")
         with open(filename, "r") as file:
             for line in file:
                 stripped_line = line.strip()
@@ -94,36 +93,34 @@ def ReadProxy():
         ErrorExit("proxies.txt not found.")
 
 
-# 保存文件为excel
-def SaveFile(inputs):
+def SaveFile(inputs, filename):
     try:
         if type(inputs) == dict:
             data = []
-            filename = "output.xlsx"
+            # filename = "output.xlsx"
             for k, v in inputs.items():
                 entry = {"url": k}
                 entry.update(v)
                 data.append(entry)
             df = pd.DataFrame(data)
             df.to_excel(filename, index=True)
-            m.chgCont(f"The file \033[32m{filename}\033[0m is saved.")
-            m.printMsg("white", "Message")
+            m.changeContents(f"The file \033[32m{filename}\033[0m is saved.")
+            m.printMessage("white", "MESSAGE")
         else:
-            m.chgCont(f"{inputs} is not suitable.")
-            m.printMsg("red", "Error")
+            m.changeContents(f"{inputs} is not suitable.")
+            m.printMessage("red", "ERROR")
     except Exception as e:
         ErrorExit(e)
 
 
 # 根据opt读取yaml文件内容
-def ReadYaml(path, opt1, opt2=None):
+def ReadYaml(path, opt):
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), path)
     with open(path, "r") as file:
         data = yaml.safe_load(file)
-    if opt1 != None:
-        if opt2 != None:
-            return data[opt1][opt2]
-        return data[opt1]
-
-    else:
+    try:
+        for i in opt:
+            data = data[i]
         return data
+    except Exception as e:
+        ErrorExit(f"Read yaml error: {e}.")

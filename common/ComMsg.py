@@ -7,7 +7,7 @@ class ComMsg:
     def __init__(self, content=None) -> None:
         self.content = content
 
-    def chgCont(self, content):
+    def changeContents(self, content):
         self.content = content
 
     def addTags(self, tag, option, direct="L"):
@@ -28,7 +28,7 @@ class ComMsg:
         else:
             self.content = self.content + f"[{colors[option]}{tag}{colors['reset']}]"
 
-    def printMsg(self, tags_color, tagscontent, refresh=False):
+    def printMessage(self, tags_color, tagscontent, refresh=False):
         self.addTags(tagscontent, tags_color)
         self.addTags(datetime.now().strftime("%H:%M:%S"), "blue")
         if refresh:
@@ -36,13 +36,13 @@ class ComMsg:
         # 重置
         else:
             print(f"{self.content}")
-        self.chgCont("")
+        self.changeContents("")
 
 
 # 出现错误 输出错误信息并退出
 def ErrorExit(message):
-    m = ComMsg(message)
-    m.printMsg("red", "Error")
+    M = ComMsg(message)
+    M.printMessage("red", "Error")
     print(HELP)
     import sys
 

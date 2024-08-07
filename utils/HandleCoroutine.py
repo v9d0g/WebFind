@@ -5,7 +5,7 @@ from common.ConstSetting import SETTINGS
 
 
 # 协程任务调度 params作为传入列表 func作为函数
-async def coroutineStart(params, func):
+async def coroutineStart(params: list, func):
     semaphore = asyncio.Semaphore(SETTINGS["thread"])
     tasks = [func(param, semaphore) for param in params]
     await asyncio.gather(*tasks)

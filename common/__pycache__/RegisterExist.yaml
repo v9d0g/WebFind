@@ -1,0 +1,38 @@
+div:
+  # 内容
+  Contents:
+    and:
+      regular:
+        - 
+    or:
+      regular:
+        - "注册"
+        - "register"
+input:
+  # 内容
+  Contents:
+    and:
+      regular:
+        - 
+    or:
+      regular:
+        - "注册"
+        - "register"
+  # 属性
+  placeholder:
+    and:
+      regular:
+        -
+    or:
+      regular:
+        - "注册"
+        - "register"
+  # 属性
+  value:
+    and:
+      regular:
+        -
+    or:
+      regular:
+        - "注册"
+        - "register"

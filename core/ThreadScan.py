@@ -77,6 +77,9 @@ async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
                 code = response.status_code
                 title = getCont(response.text, "title")
                 size = int(len(response.content) / 1024)
+                m.changeContents(f"{url}" + " ")
+                m.addTags(f"{code}", "yellow")
+                m.addTags(f"{title} {size}KB", "black", "R")
                 if response.status_code in SETTINGS["allow"]:
                     if SETTINGS["recognize"] != False:
                         T.recognizeHtml(response.text, SETTINGS["recognize"])
@@ -84,9 +87,7 @@ async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
                         # T.judgeTemplate(response.text)
                         # m.addTags("探测结果", "green", "R")
                         pass
-                    m.changeContents(f"{url}" + " ")
-                    m.addTags(f"{code}", "yellow")
-                    m.addTags(f"{title} {size}KB", "black", "R")
+                    m.printMessage("green", "ALIVE")
                     ALIVECOUNT.append("ok")
                     SUCCESSMESSAGE.update(
                         {
@@ -97,11 +98,7 @@ async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
                             }
                         }
                     )
-                    m.printMessage("green", "ALIVE")
                 else:
-                    m.changeContents(f"{url}" + " ")
-                    m.addTags(f"{code}", "yellow")
-                    m.addTags(f"{title} {size}KB", "black", "R")
                     m.printMessage("white", "IGNORE")
                     IGNOREMESSAGE.update(
                         {
@@ -114,7 +111,7 @@ async def ScanWeb(url, semaphore, SETTINGS=SETTINGS, HTTP=HTTP):
                     )
         except Exception as e:
             m.changeContents(f"{url} ")
-            m.addTags(f"{e}", "red", "R")
+            m.addTags(f"出现错误:{e}", "red", "R")
             m.printMessage("red", "ERROR")
             FAILEDMESSAGE.update(
                 {
